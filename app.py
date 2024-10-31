@@ -41,5 +41,5 @@ if submitted and user_input:
     assistant_reply = get_ai_response(user_input)
     st.session_state.history.append({"role": "assistant", "content": assistant_reply, "time": current_time})
 
-    # Очищення поля вводу після відправки
-    st.experimental_rerun()
+    # Встановлюємо параметри запиту, щоб примусити оновлення сторінки
+    st.experimental_set_query_params(update="true")
