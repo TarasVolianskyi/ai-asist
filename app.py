@@ -14,6 +14,18 @@ st.title("AI Асистент")
 if "history" not in st.session_state:
     st.session_state.history = []
 
+# Додавання JavaScript для автоматичного оновлення сторінки кожну секунду
+st.markdown(
+    """
+    <script>
+    setInterval(function(){
+        window.location.reload();
+    }, 1000);
+    </script>
+    """,
+    unsafe_allow_html=True
+)
+
 # Стилі для бульбашок повідомлень
 user_style = "background-color: #DCF8C6; color: black; padding: 10px; border-radius: 8px; margin: 5px 0; text-align: right; width: fit-content; max-width: 80%;"
 assistant_style = "background-color: #ECECEC; color: black; padding: 10px; border-radius: 8px; margin: 5px 0; text-align: left; width: fit-content; max-width: 80%;"
@@ -40,7 +52,3 @@ if submitted and user_input:
     # Отримуємо відповідь від AI і додаємо в історію
     assistant_reply = get_ai_response(user_input)
     st.session_state.history.append({"role": "assistant", "content": assistant_reply, "time": current_time})
-
-# Оновлення інтерфейсу після натискання кнопки "Відправити" з окремою кнопкою
-if submitted:
-    st.button("Запустити відповіді", on_click=lambda: st.session_state.history)
