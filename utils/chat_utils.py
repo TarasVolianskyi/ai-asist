@@ -26,7 +26,7 @@ def get_ai_response(user_input):
     ]
     
     try:
-        # Виклик API для отримання відповіді
+        # Make the API call
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=messages,
@@ -34,9 +34,11 @@ def get_ai_response(user_input):
         )
         return response.choices[0].message["content"]
     
+    except openai.error.APIError as e:
+        return "An API error occurred: {}".format(e)
     except openai.error.RateLimitError:
-        return "Ви перевищили ліміт використання API. Перевірте ваш план та квоти в OpenAI Dashboard."
+        return "You have exceeded your API rate limit. Please check your plan and quotas on the OpenAI Dashboard."
     except openai.error.AuthenticationError:
-        return "Помилка автентифікації. Перевірте API ключ у файлі .env."
-    except openai.error.OpenAIError as e:
-        return f"Інша помилка API OpenAI: {str(e)}"
+        return "Authentication error. Please check your API key in the .env file."
+    except Exception as e:
+        return f"An error occurred: {str(e)}"
