@@ -5,6 +5,7 @@ from utils.chat_utils import get_ai_response
 from datetime import datetime
 # Завантаження змінних середовища
 load_dotenv()
+
 # Ініціалізація заголовка
 st.title("AI Асистент")
 # Ініціалізація історії чату
