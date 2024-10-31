@@ -10,9 +10,11 @@ load_dotenv()
 # Ініціалізація заголовка
 st.title("AI Асистент")
 
-# Ініціалізація історії чату
+# Ініціалізація історії чату та флагу оновлення
 if "history" not in st.session_state:
     st.session_state.history = []
+if "update_needed" not in st.session_state:
+    st.session_state.update_needed = False
 
 # Стилі для бульбашок повідомлень
 user_style = "background-color: #DCF8C6; color: black; padding: 10px; border-radius: 8px; margin: 5px 0; text-align: right; width: fit-content; max-width: 80%;"
@@ -37,8 +39,14 @@ if submitted and user_input:
     # Додаємо повідомлення від користувача
     st.session_state.history.append({"role": "user", "content": user_input, "time": current_time})
 
-    # Отримуємо відповідь від AI одразу після додавання повідомлення користувача
+    # Отримуємо відповідь від AI і додаємо в історію
     assistant_reply = get_ai_response(user_input)
     st.session_state.history.append({"role": "assistant", "content": assistant_reply, "time": current_time})
 
-# Всі повідомлення оновлюються автоматично завдяки збереженню в session_state
+    # Встановлюємо прапорець оновлення, щоб примусити перезавантаження
+    st.session_state.update_needed = True
+
+# Примусове оновлення інтерфейсу, якщо встановлено прапорець
+if st.session_state.update_needed:
+    st.session_state.update_needed = False
+    st.experimental_rerun()
