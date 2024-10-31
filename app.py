@@ -36,10 +36,9 @@ if submitted and user_input:
     
     # Додаємо повідомлення від користувача
     st.session_state.history.append({"role": "user", "content": user_input, "time": current_time})
-    
-    # Отримуємо відповідь від AI
+
+    # Отримуємо відповідь від AI одразу після додавання повідомлення користувача
     assistant_reply = get_ai_response(user_input)
     st.session_state.history.append({"role": "assistant", "content": assistant_reply, "time": current_time})
 
-    # Встановлюємо параметри запиту, щоб примусити оновлення сторінки
-    st.experimental_set_query_params(update="true")
+# Всі повідомлення оновлюються автоматично завдяки збереженню в session_state
