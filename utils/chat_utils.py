@@ -2,20 +2,19 @@ import openai
 import os
 from dotenv import load_dotenv
 
-# Завантажуємо API ключ і ініціалізуємо клієнт
+# Завантаження змінних середовища
 load_dotenv()
 api_key = os.getenv("OPENAI_API_KEY")
-client = openai.OpenAI(api_key=api_key)
+openai.api_key = api_key  # Встановлення API ключа напряму
 
 def get_ai_response(user_input):
-    # Визначаємо системне повідомлення
+    # Визначення системного повідомлення
     system_prompt = """
 Ти — асистент для навчання користувача життєвим навичкам, який допомагає з інтеграцією нових знань і навичок у реальні ситуації.
 - **Сценарій 1**: Давай практичні рекомендації щодо того, як користувач може інтегрувати знання у повсякденне життя.
 - **Сценарій 2**: Проведи ретроспективу після 14-денного спринту, з аналізом результатів і рекомендаціями для подальших кроків.
 - **Сценарій 3**: Виступай у ролі "Компаньйона-співрозмовника", допомагаючи користувачу розвивати навички через діалог.
 - **Сценарій 4**: На основі результатів тесту створюй візуалізацію життя користувача через 20 років з урахуванням розвитку ключових навичок.
-
 При відповіді:
 - Став запитання, щоб допомогти користувачеві краще зрозуміти свої інсайти та ідеї.
 - Давай рекомендації, щоб користувач міг глибше засвоїти вивчене.
@@ -27,17 +26,17 @@ def get_ai_response(user_input):
     ]
     
     try:
-        # Викликаємо новий метод через клієнта
-        response = client.chat.completions.create(
+        # Виклик API для отримання відповіді
+        response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=messages,
             max_tokens=100
         )
-        return response.choices[0].message.content
+        return response.choices[0].message["content"]
     
-    except openai.exceptions.RateLimitError:
+    except openai.error.RateLimitError:
         return "Ви перевищили ліміт використання API. Перевірте ваш план та квоти в OpenAI Dashboard."
-    except openai.exceptions.AuthenticationError:
+    except openai.error.AuthenticationError:
         return "Помилка автентифікації. Перевірте API ключ у файлі .env."
-    except openai.exceptions.OpenAIError as e:
+    except openai.error.OpenAIError as e:
         return f"Інша помилка API OpenAI: {str(e)}"
